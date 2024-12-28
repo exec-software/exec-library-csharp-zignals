@@ -15,7 +15,10 @@ public sealed class ZignalsImpl {
         return this;
     }
 
-    public bool OfType(string sSignalType) {
+    public bool OfType(string sSignalType, bool bRequiresTagging = true) {
+        if (bRequiresTagging) {
+            sSignalType = SignalsTk.Tag(sSignalType);
+        }
         if (!string.IsNullOrEmpty(sSignalType)) {
             if (IsOk && Reference is not null) {
                 return SignalsTk.IsTypeof(Reference, sSignalType);

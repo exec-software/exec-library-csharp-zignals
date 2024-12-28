@@ -4,7 +4,10 @@ namespace Execute.Library.Signals;
 
 public static class SignalsTk {
     public static Signal NewSignal(SignalPriority spSignalPriority, string sSignalType, string sSignalOrigin = "",
-        params KeyValuePair<string, object>[] kvaRecords) {
+        bool bRequiresTagging = true, params KeyValuePair<string, object>[] kvaRecords) {
+        if (bRequiresTagging) {
+            sSignalType = Tag(sSignalType);
+        }
         Signal siNewSignal = new Signal {
             Priority = spSignalPriority,
             Type = sSignalType,
@@ -34,4 +37,6 @@ public static class SignalsTk {
         }
         return false;
     }
+    
+    public static string Tag(string siSignalName, string sSeperator = "") => $"SIG{sSeperator}{siSignalName}";
 }

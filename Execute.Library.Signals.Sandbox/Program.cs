@@ -8,6 +8,8 @@ using System.Diagnostics;
 using Signals;
 
 public static class Program {
+
+    
     public static async Task Main(string[] saArguments) {
         Signaler siSignaler = new Signaler(new SignalerConfiguration {
             Debug = true
@@ -16,9 +18,9 @@ public static class Program {
         MockWatcher2 moMockWatcher2 = new MockWatcher2(siSignaler);
         MockWatcher3 moMockWatcher3 = new MockWatcher3(siSignaler);
         
-        siSignaler.Emit(SignalsTk.NewSignal(SignalPriority.Standard, "Event.Signal.One"));
-        siSignaler.Emit(SignalsTk.NewSignal(SignalPriority.Standard, "Event.Signal.Three"));
-        siSignaler.Emit(SignalsTk.NewSignal(SignalPriority.Standard, "SomeBadShit"));
+        siSignaler.Emit(SignalsTk.NewSignal(SignalPriority.Standard, MockSignals.One));
+        siSignaler.Emit(SignalsTk.NewSignal(SignalPriority.Standard, MockSignals.Two));
+        siSignaler.Emit(SignalsTk.NewSignal(SignalPriority.Standard, MockSignals.DaFuq));
 
         Console.WriteLine("Press any key to continue...");
         while (!Console.KeyAvailable) {

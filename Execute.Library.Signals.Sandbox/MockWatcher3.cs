@@ -19,7 +19,7 @@ public sealed class MockWatcher3 : SignalWatcher {
     }
     
     public void Receive(Signal siSignal) {
-        if (Zignals.Is(siSignal).OfType("Event.Signal.Three")) {
+        if (Zignals.Is(siSignal).OfType(MockSignals.DaFuq)) {
             StringBuilder sbBuffer = new StringBuilder();
             sbBuffer.AppendLine($"[{UUID}]");
             sbBuffer.AppendLine($"\tTag (\"{siSignal.Type}\")");
