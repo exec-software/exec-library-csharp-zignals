@@ -15,16 +15,10 @@ public static class Program {
         MockWatcher1 moMockWatcher1 = new MockWatcher1(siSignaler);
         MockWatcher2 moMockWatcher2 = new MockWatcher2(siSignaler);
         MockWatcher3 moMockWatcher3 = new MockWatcher3(siSignaler);
-
-        Signal siNewSignal =
-            SignalsTk.NewSignal(SignalPriority.Standard,
-                "Event.Something.Happened",
-                "Program::Main",
-                new KeyValuePair<string, object>("Record1", 1 ),
-                new KeyValuePair<string, object>("Record2", "Two" ),
-                new KeyValuePair<string, object>("Record3", false ),
-                new KeyValuePair<string, object>("Record4",  moMockWatcher1));
-        siSignaler.Emit(siNewSignal);
+        
+        siSignaler.Emit(SignalsTk.NewSignal(SignalPriority.Standard, "Event.Signal.One"));
+        siSignaler.Emit(SignalsTk.NewSignal(SignalPriority.Standard, "Event.Signal.Three"));
+        siSignaler.Emit(SignalsTk.NewSignal(SignalPriority.Standard, "SomeBadShit"));
 
         Console.WriteLine("Press any key to continue...");
         while (!Console.KeyAvailable) {

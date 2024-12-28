@@ -18,7 +18,7 @@ public sealed class MockWatcher2 : SignalWatcher {
         Signals = siSignaler;
     }
     public void Receive(Signal siSignal) {
-        if (siSignal is not null) {
+        if (Zignals.Is(siSignal).OfType("Event.Signal.Two")) {
             StringBuilder sbBuffer = new StringBuilder();
             sbBuffer.AppendLine($"[{UUID}]");
             sbBuffer.AppendLine($"\tTag (\"{siSignal.Type}\")");
@@ -28,7 +28,7 @@ public sealed class MockWatcher2 : SignalWatcher {
             foreach (KeyValuePair<string, object> kvRecord in siSignal.Records) {
                 sbBuffer.AppendLine($"\t\t\"{kvRecord.Key}\" -> \"{kvRecord.Value}\"");
             }
-            Console.WriteLine($"MockedRecord::Received >>>\n{sbBuffer} ");
+            Console.WriteLine($"MockedRecord2::Received >>>\n{sbBuffer} ");
         }
     }
 }

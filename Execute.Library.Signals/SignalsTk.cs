@@ -25,4 +25,13 @@ public static class SignalsTk {
             }
         }
     }
+
+    public static bool IsTypeof(Signal siSignal, string sSignalType) {
+        if (siSignal is not null) {
+            if (!string.IsNullOrEmpty(sSignalType)) {
+                return siSignal.Type == sSignalType;
+            }
+        }
+        return false;
+    }
 }
