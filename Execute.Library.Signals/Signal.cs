@@ -27,7 +27,7 @@ public sealed class Signal {
         Priority = SignalPriority.Standard;
     }
 
-    public void Link(string sKey, object oValue) {
+    public void Pack(string sKey, object oValue) {
         if (!string.IsNullOrEmpty(sKey)) {
             if (oValue is not null) {
                 Records.Add(sKey, oValue);
@@ -35,11 +35,18 @@ public sealed class Signal {
         }
     }
     
-    public void Link(KeyValuePair<string, object> kvPair) {
+    public void Pack(KeyValuePair<string, object> kvPair) {
         if (!string.IsNullOrEmpty(kvPair.Key)) {
             if (kvPair.Value is not null) {
                 Records.Add(kvPair);
             }
         }
+    }
+
+    public object? Unpack(string sRecordKey) {
+        if (!string.IsNullOrEmpty(sRecordKey)) {
+            return Records[sRecordKey];
+        }
+        return null;
     }
 }

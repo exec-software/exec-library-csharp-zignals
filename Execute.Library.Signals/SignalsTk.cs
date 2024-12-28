@@ -14,7 +14,7 @@ public static class SignalsTk {
             Origin = sSignalOrigin
         };
         foreach (KeyValuePair<string, object> kvPair in kvaRecords) {
-            siNewSignal.Link(kvPair);
+            siNewSignal.Pack(kvPair);
         }
         return siNewSignal;
     }
