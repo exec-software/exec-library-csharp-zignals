@@ -105,6 +105,7 @@ Override `on_error` to route it somewhere better than stderr.
 
 ```sh
 dotnet build Execute.Library.Signals.sln
+dotnet test Execute.Library.Signals.sln
 dotnet run --project Execute.Library.Signals.Sandbox
 ```
 
@@ -118,10 +119,19 @@ program never raises, which is how you can tell filtering is doing something.
 `scripts/bump-version.sh` increments it and carries the matching `N.0.0` into
 the project file.
 
+## Tests
+
+`Execute.Library.Signals.Tests` covers the record API, the signal toolkit, the
+queue's delivery guarantees, watcher registration and the matching helpers.
+Several are regression tests for specific defects, each noting in a comment
+what used to happen.
+
+```sh
+dotnet test Execute.Library.Signals.sln
+```
+
 ## Known gaps
 
-- There are no tests. The library was written before the project had any, and
-  the sandbox is a demonstration rather than an assertion of anything.
 - `receive` is called for every signal_record on every watcher; there is no
   subscription by type.
 - `on_error` reports to stderr and continues. There is no retry, and no
