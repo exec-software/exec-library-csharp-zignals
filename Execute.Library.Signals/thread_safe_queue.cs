@@ -50,7 +50,24 @@ public abstract class thread_safe_queue : IDisposable {
         processing_thread_.Join();
     }
 
-    public async Task<bool> awaiting_processing(Action signal_callback) => pending_signals_.Contains(signal_callback);
+    // How many signals are enqueued and not yet handed to think().
+    //
+    // This replaces 'async Task<bool> awaiting_processing(Action)', which no
+    // caller could use: the Action it looked for is a closure built inside
+    // enqueue and never handed back, so there was no way to obtain the
+    // reference it compared against. It was also declared async with nothing
+    // to await, so it warned on every build and ran synchronously anyway, and
+    // it read the queue without taking the lock that every other access takes.
+    //
+    // The only caller was a commented-out emit_await on signaler, which spun
+    // on it in a tight loop.
+    public int pending {
+        get {
+            lock (pending_signals_) {
+                return pending_signals_.Count;
+            }
+        }
+    }
 
     private void think_loop() {
         while (true) {
