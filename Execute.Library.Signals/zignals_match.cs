@@ -5,12 +5,12 @@
 
 namespace Execute.Library.Signals;
 
-public sealed class zignals_impl {
-    // Optional LINQ chain interface for signal processing.
+public sealed class zignals_chain {
+    // Optional LINQ chain interface for signal_record processing.
     private bool is_ok_ { get; set; }
-    private signal? reference_ { get; set; }
+    private signal_record? reference_ { get; set; }
 
-    public zignals_impl @is(signal sig) {
+    public zignals_chain @is(signal_record sig) {
         if (sig is not null) {
             is_ok_ = true;
             reference_ = sig;
@@ -33,6 +33,6 @@ public sealed class zignals_impl {
     public bool not_of_type(string signal_type) => !of_type(signal_type);
 }
 
-public static class zignals {
-    public static zignals_impl @is(signal sig) => new zignals_impl().@is(sig);
+public static class zignals_match {
+    public static zignals_chain @is(signal_record sig) => new zignals_chain().@is(sig);
 }

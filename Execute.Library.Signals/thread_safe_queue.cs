@@ -16,7 +16,7 @@ public abstract class thread_safe_queue : IDisposable {
     // - Operations are copied to ensure non-blocking.
     // - AutoResetEvent ensures background thread is in the "wait" state.
     // - Disposable; make sure you clean up after yourself... We don't hold hands here...
-    // - Optimized for scenario where signal burst is enqueued followed by silence.
+    // - Optimized for scenario where signal_record burst is enqueued followed by silence.
     // - Background thread start is performed from the background to ensure
     //   servicing queue is a single thread.
     //
@@ -28,7 +28,7 @@ public abstract class thread_safe_queue : IDisposable {
     private ManualResetEvent on_terminate_ = new ManualResetEvent(false);
     private volatile ManualResetEvent on_waiting_ = new ManualResetEvent(false);
 
-    protected abstract void think(signal sig);
+    protected abstract void think(signal_record sig);
 
     public thread_safe_queue() {
         processing_thread_ = new Thread(new ThreadStart(think_loop));
@@ -36,7 +36,7 @@ public abstract class thread_safe_queue : IDisposable {
         processing_thread_.Start();
     }
 
-    public void enqueue(signal sig) {
+    public void enqueue(signal_record sig) {
         lock (pending_signals_) {
             pending_signals_.Enqueue(() => {
                 try {
@@ -63,7 +63,7 @@ public abstract class thread_safe_queue : IDisposable {
     // So any watcher that threw once, for any reason, took the entire host
     // application down with it. A library handed arbitrary user code to run
     // cannot treat that as the caller's problem.
-    protected virtual void on_error(signal sig, Exception error) {
+    protected virtual void on_error(signal_record sig, Exception error) {
         Console.Error.WriteLine($"[signals] watcher threw while handling '{sig.type}': {error}");
     }
 
@@ -83,7 +83,7 @@ public abstract class thread_safe_queue : IDisposable {
     // to await, so it warned on every build and ran synchronously anyway, and
     // it read the queue without taking the lock that every other access takes.
     //
-    // The only caller was a commented-out emit_await on signaler, which spun
+    // The only caller was a commented-out emit_await on signal_router, which spun
     // on it in a tight loop.
     public int pending {
         get {

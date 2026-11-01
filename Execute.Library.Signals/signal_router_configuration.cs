@@ -5,6 +5,6 @@
 
 namespace Execute.Library.Signals;
 
-public struct signaler_configuration {
+public struct signal_router_configuration {
     public bool debug { get; set; }
 }

@@ -1,7 +1,7 @@
 # Execute.Library.Signals
 
 A small .NET library for asynchronous processing and routing of generic
-signals. Something raises a signal; anything watching that kind of signal is
+signals. Something raises a signal_record; anything watching that kind of signal_record is
 handed it on a background worker, and the raiser carries on.
 
 It is deliberately plain: no dependencies beyond the framework, one worker
@@ -14,13 +14,13 @@ Requires .NET 8 or newer.
 ```csharp
 using Execute.Library.Signals;
 
-// One signaler per application, usually.
-signaler sig = new signaler(new signaler_configuration { debug = false });
+// One signal_router per application, usually.
+signal_router sig = new signal_router(new signal_router_configuration { debug = false });
 
 // Register a watcher by hand...
 sig.watch("inventory", new inventory_watcher());
 
-// ...and raise a signal. emit returns immediately; delivery happens on the
+// ...and raise a signal_record. emit returns immediately; delivery happens on the
 // queue's worker thread.
 sig.emit(signals_tk.new_signal(signal_priority.high, "ItemAdded", "warehouse",
     true, new KeyValuePair<string, object>("sku", "WIDGET")));
@@ -36,8 +36,8 @@ A watcher implements `signal_watcher`:
 public sealed class inventory_watcher : signal_watcher {
     public string uuid => "inventory";
 
-    public void receive(signal sig) {
-        if (zignals.@is(sig).of_type("ItemAdded")) {
+    public void receive(signal_record sig) {
+        if (zignals_match.@is(sig).of_type("ItemAdded")) {
             object? sku = sig.unpack("sku");
             Console.WriteLine($"added {sku}");
         }
@@ -45,36 +45,36 @@ public sealed class inventory_watcher : signal_watcher {
 }
 ```
 
-Carrying `[signal_watcher_attribute]` means the `signaler` constructor finds
+Carrying `[signal_watcher_attribute]` means the `signal_router` constructor finds
 the class in the entry assembly, constructs it with its parameterless
 constructor, and registers it under its `uuid`. A class with the attribute
 that does not implement `signal_watcher` is ignored.
 
 ## Signals
 
-A `signal` is a type string, a timestamp, an origin, a priority, and a bag of
+A `signal_record` is a type string, a timestamp, an origin, a priority, and a bag of
 records.
 
 | Member | Meaning |
 |---|---|
 | `type` | what happened; tagged `SIG<name>` by `signals_tk.tag` unless you opt out |
-| `timestamp` | set when the signal is constructed |
+| `timestamp` | set when the signal_record is constructed |
 | `origin` | who raised it; reads `"Unknown"` when unset |
 | `priority` | `minor`, `standard`, `high`, `critical` |
 | `records` | string-keyed payload |
 | `pack(key, value)` | adds a record; packing the same key again replaces it |
-| `unpack(key)` | the record, or `null` if the signal does not carry it |
+| `unpack(key)` | the record, or `null` if the signal_record does not carry it |
 
-`priority` is carried on the signal and is available to a watcher. The queue
+`priority` is carried on the signal_record and is available to a watcher. The queue
 itself is FIFO and does not reorder by priority.
 
 ## Matching
 
-`zignals` is a small chaining helper for the common test in `receive`:
+`zignals_match` is a small chaining helper for the common test in `receive`:
 
 ```csharp
-if (zignals.@is(sig).of_type("ItemAdded")) { ... }
-if (zignals.@is(sig).not_of_type("ItemRemoved")) { ... }
+if (zignals_match.@is(sig).of_type("ItemAdded")) { ... }
+if (zignals_match.@is(sig).not_of_type("ItemRemoved")) { ... }
 ```
 
 `@is` is spelled with the `@` because `is` is a C# keyword and the house style
@@ -83,22 +83,22 @@ the chain.
 
 ## Delivery
 
-`signaler` owns one `signal_queue`, which extends `thread_safe_queue`:
+`signal_router` owns one `signal_queue`, which extends `thread_safe_queue`:
 
 - One background thread services the queue. It is started once and kept
-  alive, never spun up per signal.
+  alive, never spun up per signal_record.
 - `emit` takes a lock only long enough to enqueue, then signals the worker.
 - The worker copies the pending queue under the lock and drains its copy
   outside it, so a slow watcher does not block producers.
-- Every registered watcher receives every signal. Filtering is the watcher's
-  job, which is what `zignals` is for.
+- Every registered watcher receives every signal_record. Filtering is the watcher's
+  job, which is what `zignals_match` is for.
 - `pending` reports how many signals are enqueued and not yet delivered.
 - `flush()` waits for the worker to reach its idle state; `kill()` flushes and
   shuts down.
 
 A watcher runs on the worker thread, so anything it touches needs to be safe
 for that. An exception thrown out of `receive` is caught, reported through
-`thread_safe_queue.on_error`, and the worker carries on with the next signal.
+`thread_safe_queue.on_error`, and the worker carries on with the next signal_record.
 Override `on_error` to route it somewhere better than stderr.
 
 ## Building
@@ -122,12 +122,10 @@ the project file.
 
 - There are no tests. The library was written before the project had any, and
   the sandbox is a demonstration rather than an assertion of anything.
-- `receive` is called for every signal on every watcher; there is no
+- `receive` is called for every signal_record on every watcher; there is no
   subscription by type.
 - `on_error` reports to stderr and continues. There is no retry, and no
-  dead-letter queue: a signal whose watcher threw is gone.
-- Library type names are lower case, which the C# compiler reports as CS8981:
-  such names may become reserved by a future language version.
+  dead-letter queue: a signal_record whose watcher threw is gone.
 
 ## License
 

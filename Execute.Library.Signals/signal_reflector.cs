@@ -7,7 +7,7 @@ namespace Execute.Library.Signals;
 
 using System.Reflection;
 
-public static class reflector {
+public static class signal_reflector {
     // Searches the assembly it is handed.
     //
     // This took a name and an unused instance of Tx, and looked in

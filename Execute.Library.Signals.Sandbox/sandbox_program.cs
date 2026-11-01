@@ -7,10 +7,10 @@ namespace Execute.Library.Signals.Sandbox;
 
 using Signals;
 
-public static class program {
+public static class sandbox_program {
     // Main keeps its BCL spelling: the runtime looks for it by name.
     public static void Main(string[] arguments) {
-        signaler sig = new signaler(new signaler_configuration {
+        signal_router sig = new signal_router(new signal_router_configuration {
             debug = true
         });
         mock_watcher_1 watcher_1 = new mock_watcher_1(sig);

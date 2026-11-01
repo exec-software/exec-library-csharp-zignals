@@ -12,7 +12,7 @@ public sealed class signal_queue : thread_safe_queue {
         watchers = queue_watchers;
     }
 
-    protected override void think(signal sig) {
+    protected override void think(signal_record sig) {
         if (watchers is not null) {
             foreach (KeyValuePair<string, signal_watcher> pair in watchers) {
                 pair.Value.receive(sig);

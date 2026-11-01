@@ -7,12 +7,12 @@ namespace Execute.Library.Signals;
 
 using System.Reflection;
 
-public sealed class signaler {
+public sealed class signal_router {
     public IDictionary<string, signal_watcher> watchers { get; private set; } = new Dictionary<string, signal_watcher>();
-    public signaler_configuration configuration { get; private set; }
+    public signal_router_configuration configuration { get; private set; }
     private signal_queue queue_ { get; set; }
 
-    public signaler(signaler_configuration config) {
+    public signal_router(signal_router_configuration config) {
         configuration = config;
 
         // Register attributed classes.
@@ -22,7 +22,7 @@ public sealed class signaler {
         // implementing signal_watcher took the constructor down with an
         // InvalidCastException -- the attribute is the only thing asking to be
         // registered, and nothing made it imply the interface. It then built a
-        // SECOND instance of each watcher through reflector.instantiate and
+        // SECOND instance of each watcher through signal_reflector.instantiate and
         // registered that, discarding the one find_attributed had already
         // constructed, so every watcher was created twice.
         //
@@ -31,7 +31,7 @@ public sealed class signaler {
         // old code passed straight on.
         Assembly? assembly = Assembly.GetEntryAssembly();
         if (assembly is not null) {
-            foreach (object attributed in reflector.find_attributed<signal_watcher_attribute>(assembly)) {
+            foreach (object attributed in signal_reflector.find_attributed<signal_watcher_attribute>(assembly)) {
                 if (attributed is signal_watcher watcher) {
                     watch(watcher.uuid, watcher);
                 }
@@ -62,7 +62,7 @@ public sealed class signaler {
         }
     }
 
-    public void emit(signal sig) {
+    public void emit(signal_record sig) {
         if (sig is not null) {
             queue_.enqueue(sig);
         }

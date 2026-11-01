@@ -8,5 +8,5 @@ namespace Execute.Library.Signals;
 public interface signal_watcher {
     public string uuid { get; }
 
-    public void receive(signal sig);
+    public void receive(signal_record sig);
 }

@@ -5,7 +5,7 @@
 
 namespace Execute.Library.Signals;
 
-public sealed class signal {
+public sealed class signal_record {
     public string type { get; set; } = string.Empty;
     public DateTime timestamp { get; set; } = DateTime.Now;
     public IDictionary<string, object> records { get; set; } = new Dictionary<string, object>();
@@ -23,7 +23,7 @@ public sealed class signal {
         set => origin_ = value;
     }
 
-    public signal() {
+    public signal_record() {
         priority = signal_priority.standard;
     }
 
@@ -33,7 +33,7 @@ public sealed class signal {
     //   sig.pack("k", 1); sig.pack("k", 2);
     //   -> ArgumentException: An item with the same key has already been added.
     //
-    // A signal is a bag of records being assembled, so the last value for a
+    // A signal_record is a bag of records being assembled, so the last value for a
     // key wins and packing is safe to repeat.
     public void pack(string key, object value) {
         if (!string.IsNullOrEmpty(key)) {
@@ -53,7 +53,7 @@ public sealed class signal {
 
     // Returns null for a key that is not present, which the object? return
     // type always promised. It indexed the dictionary directly, so asking for
-    // a record a signal does not carry threw instead:
+    // a record a signal_record does not carry threw instead:
     //
     //   sig.unpack("absent")
     //   -> KeyNotFoundException: The given key 'absent' was not present

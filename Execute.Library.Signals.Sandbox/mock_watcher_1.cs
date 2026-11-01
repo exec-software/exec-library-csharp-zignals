@@ -10,19 +10,19 @@ using Signals;
 
 [signal_watcher_attribute]
 public sealed class mock_watcher_1 : signal_watcher {
-    private signaler? signals_ { get; set; }
+    private signal_router? signals_ { get; set; }
 
     public mock_watcher_1() {}
 
     public string uuid => "mock_watcher_1";
 
-    public mock_watcher_1(signaler sig) {
+    public mock_watcher_1(signal_router sig) {
         signals_ = sig;
         signals_tk.verify_registration(sig, uuid, this);
     }
 
-    public void receive(signal sig) {
-        if (zignals.@is(sig).of_type(mock_signals.one)) {
+    public void receive(signal_record sig) {
+        if (zignals_match.@is(sig).of_type(mock_signals.one)) {
             StringBuilder buffer = new StringBuilder();
             buffer.AppendLine($"[{uuid}]");
             buffer.AppendLine($"\tTag (\"{sig.type}\")");
