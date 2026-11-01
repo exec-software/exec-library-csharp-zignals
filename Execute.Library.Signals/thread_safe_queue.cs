@@ -38,9 +38,33 @@ public abstract class thread_safe_queue : IDisposable {
 
     public void enqueue(signal sig) {
         lock (pending_signals_) {
-            pending_signals_.Enqueue(() => think(sig));
+            pending_signals_.Enqueue(() => {
+                try {
+                    think(sig);
+                }
+                catch (Exception error) {
+                    on_error(sig, error);
+                }
+            });
         }
         on_new_record_.Set();
+    }
+
+    // Called when a watcher throws. Reports to stderr by default; override to
+    // route it somewhere useful.
+    //
+    // Nothing caught this before. think() runs on the background worker, and
+    // an exception escaping a thread does not merely end that thread in .NET
+    // -- it terminates the process:
+    //
+    //   Unhandled exception. System.InvalidOperationException: from receive
+    //      at thread_safe_queue.think_loop()
+    //
+    // So any watcher that threw once, for any reason, took the entire host
+    // application down with it. A library handed arbitrary user code to run
+    // cannot treat that as the caller's problem.
+    protected virtual void on_error(signal sig, Exception error) {
+        Console.Error.WriteLine($"[signals] watcher threw while handling '{sig.type}': {error}");
     }
 
     public void flush() => on_waiting_.WaitOne();
