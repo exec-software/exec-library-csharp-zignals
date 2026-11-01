@@ -5,9 +5,6 @@
 
 namespace Execute.Library.Signals;
 
-public enum SignalPriority : byte {
-    Minor = 1,
-    Standard = 2,
-    High = 3,
-    Critical = 4
+public struct signaler_configuration {
+    public bool debug { get; set; }
 }

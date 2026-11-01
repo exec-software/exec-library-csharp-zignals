@@ -5,6 +5,8 @@
 
 namespace Execute.Library.Signals;
 
-public struct SignalerConfiguration {
-    public bool Debug { get; set; }
+public interface signal_watcher {
+    public string uuid { get; }
+
+    public void receive(signal sig);
 }

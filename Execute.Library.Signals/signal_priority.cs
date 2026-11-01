@@ -5,8 +5,9 @@
 
 namespace Execute.Library.Signals;
 
-public interface SignalWatcher {
-    public string UUID { get; }
-    
-    public void Receive(Signal siSignal);
+public enum signal_priority : byte {
+    minor = 1,
+    standard = 2,
+    high = 3,
+    critical = 4
 }
