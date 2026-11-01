@@ -16,13 +16,26 @@ public sealed class signaler {
         configuration = config;
 
         // Register attributed classes.
-        Assembly assembly = Assembly.GetEntryAssembly();
-        IList<object> attributed_records =
-            reflector.find_attributed<signal_watcher_attribute>(assembly)
-                     .ToList();
-        foreach (signal_watcher attributed_record in attributed_records) {
-            signal_watcher watcher = reflector.instantiate<signal_watcher>(attributed_record.GetType()) as signal_watcher;
-            watch(attributed_record.uuid, watcher);
+        //
+        // This iterated an IList<object> as 'foreach (signal_watcher x in ...)',
+        // which casts each element, so a class carrying the attribute without
+        // implementing signal_watcher took the constructor down with an
+        // InvalidCastException -- the attribute is the only thing asking to be
+        // registered, and nothing made it imply the interface. It then built a
+        // SECOND instance of each watcher through reflector.instantiate and
+        // registered that, discarding the one find_attributed had already
+        // constructed, so every watcher was created twice.
+        //
+        // GetEntryAssembly also returns null when there is no managed entry
+        // point, such as under a test host or when hosted natively, which the
+        // old code passed straight on.
+        Assembly? assembly = Assembly.GetEntryAssembly();
+        if (assembly is not null) {
+            foreach (object attributed in reflector.find_attributed<signal_watcher_attribute>(assembly)) {
+                if (attributed is signal_watcher watcher) {
+                    watch(watcher.uuid, watcher);
+                }
+            }
         }
 
         queue_ = new signal_queue(watchers);
