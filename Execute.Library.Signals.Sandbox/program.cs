@@ -21,9 +21,16 @@ public static class program {
         sig.emit(signals_tk.new_signal(signal_priority.standard, mock_signals.two));
         sig.emit(signals_tk.new_signal(signal_priority.standard, mock_signals.da_fuq));
 
-        Console.WriteLine("Press any key to continue...");
-        while (!Console.KeyAvailable) {
-            continue;
-        }
+        // Give the background queue a moment to drain before the process
+        // exits. This read:
+        //
+        //   while (!Console.KeyAvailable) { continue; }
+        //
+        // which spins a core flat out until a key arrives, and throws
+        // InvalidOperationException when there is no console or stdin is
+        // redirected -- so the sample could not be run from a script or a CI
+        // job at all. kill() flushes the queue and shuts the worker down,
+        // which is what the sample should be demonstrating anyway.
+        sig.kill();
     }
 }
