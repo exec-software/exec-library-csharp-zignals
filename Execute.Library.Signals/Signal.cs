@@ -1,9 +1,11 @@
+/*
+ * Copyright (C) 2008 - 2026 Execute Software.  All rights reserved.
+ * SPDX-License-Identifier: MIT
+ */
+
 namespace Execute.Library.Signals;
 
-// Copyright (C) 2008 - 2025 Execute Software, LLC.  All rights reserved.
-
 using System;
-
 
 public sealed class Signal {
     public string Type { get; set; }

@@ -1,6 +1,9 @@
-namespace Execute.Library.Signals;
+/*
+ * Copyright (C) 2008 - 2026 Execute Software.  All rights reserved.
+ * SPDX-License-Identifier: MIT
+ */
 
-// Copyright (C) 2008 - 2025 Execute Software, LLC.  All rights reserved.
+namespace Execute.Library.Signals;
 
 using System;
 using System.Collections.Generic;

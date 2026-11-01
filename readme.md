@@ -7,4 +7,6 @@ signals (events).
 
 -- 
 
-### Copyright (C) 2008 - 2025 Execute Software, LLC.  All rights reserved.
+Licensed under the MIT License.  See [LICENSE](LICENSE).
+
+Copyright (C) 2008 - 2026 Execute Software.  All rights reserved.

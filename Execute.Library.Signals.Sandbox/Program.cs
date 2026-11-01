@@ -1,6 +1,9 @@
-﻿namespace Execute.Library.Signals.Sandbox;
+/*
+ * Copyright (C) 2008 - 2026 Execute Software.  All rights reserved.
+ * SPDX-License-Identifier: MIT
+ */
 
-// Copyright (C) 2008 - 2025 Execute Software, LLC.  All rights reserved.
+namespace Execute.Library.Signals.Sandbox;
 
 using System;
 using System.IO;
@@ -9,7 +12,6 @@ using Signals;
 
 public static class Program {
 
-    
     public static async Task Main(string[] saArguments) {
         Signaler siSignaler = new Signaler(new SignalerConfiguration {
             Debug = true
