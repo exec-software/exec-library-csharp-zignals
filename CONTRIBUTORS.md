@@ -13,8 +13,9 @@ Zignals is developed by Execute Software and its contributors.
 ## Community contributors
 
 Contributions to the signal types, matching, delivery, tests, and documentation
-are welcome. Open an issue describing the change before altering public API
-shape or delivery ordering, because consumers depend on both.
+are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the development
+workflow. Open an issue describing the change before altering public API shape
+or delivery ordering, because consumers depend on both.
 
 When submitting a contribution, you may add your preferred name below, with an
 optional profile link and a brief description of your work. Keep this section
