@@ -9,6 +9,8 @@ thread per queue, and no scheduler to configure.
 
 Requires .NET 8 or newer.
 
+[![Support us on Buy Me a Coffee](https://img.shields.io/badge/Support_us-Buy_Me_a_Coffee-FF5F5F?logo=buymeacoffee&logoColor=white)](https://www.buymeacoffee.com/execsoftware)
+
 ## Getting started
 
 ```csharp
@@ -136,6 +138,13 @@ dotnet test Execute.Library.Signals.sln
   subscription by type.
 - `on_error` reports to stderr and continues. There is no retry, and no
   dead-letter queue: a signal_record whose watcher threw is gone.
+
+## Support our work
+
+We run on your support and donations! Every contribution helps us continue
+building open-source software. Thank you for your continued support.
+
+[Contribute through Buy Me a Coffee](https://www.buymeacoffee.com/execsoftware).
 
 ## License
 
